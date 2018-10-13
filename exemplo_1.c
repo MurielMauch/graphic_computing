@@ -9,7 +9,7 @@ int main(int argc, char ** argv) {
   palette * palheta;
   bufferdevice * dispositivo;
   window * janela;
-  viewport *vp;
+  viewport * vp;
   object * poligono1, * poligono2, * poligono3;
   hobject *hpoligono1, *hpoligono2, *hpoligono3;
   
@@ -40,19 +40,20 @@ int main(int argc, char ** argv) {
   // SetObject(SetPoint(-1.0,-6.0,3), poligono2);
   // SetObject(SetPoint(-6.0,-6.0,3), poligono2);
 
-  HSetObject(HSetPoint(-9.0, -8.0, 1, 1), hpoligono1);
-  HSetObject(HSetPoint(-7.0, -3.0, 1, 1), hpoligono1);
-  HSetObject(HSetPoint(-4.0, -4.0, 1, 1), hpoligono1);
-  HSetObject(HSetPoint(-3.0, -6.0, 1, 1), hpoligono1);
-  HSetObject(HSetPoint(-6.0, -9.0, 1, 1), hpoligono1);
+  HSetObject(HSetPoint(-9, -8, 1, 1), hpoligono1);
+  HSetObject(HSetPoint(-7, -3, 1, 1), hpoligono1);
+  HSetObject(HSetPoint(-4, -4, 1, 1), hpoligono1);
+  HSetObject(HSetPoint(-3, -6, 1, 1), hpoligono1);
+  HSetObject(HSetPoint(-6, -9, 1, 1), hpoligono1);
 
-  HSetObject(HSetPoint(-6.0, -2.0, 1, 3), hpoligono2);
-  HSetObject(HSetPoint(-1.0, -2.0, 1, 3), hpoligono2);
-  HSetObject(HSetPoint(-1.0, -6.0, 1, 3), hpoligono2);
-  HSetObject(HSetPoint(-6.0, -6.0, 1, 3), hpoligono2);
+  HSetObject(HSetPoint(-6, -2, 1, 3), hpoligono2);
+  HSetObject(HSetPoint(-1, -2, 1, 3), hpoligono2);
+  HSetObject(HSetPoint(-1, -6, 1, 3), hpoligono2);
+  HSetObject(HSetPoint(-6, -6, 1, 3), hpoligono2);
   
   // janela = CreateWindow(-8.0,5.0,-7.0,5.0); // define uma janela de visualização
   janela = CreateWindow(-10.0,0.0,-10.0,0.0);  
+  vp = CreateViewport(-8, 0, 8, 0);
   
   // DrawObject(poligono1,janela,dispositivo); // desenha o poligono 1 dentro da janela no buffer do dispositivo 
   // DrawObject(poligono2,janela,dispositivo); // desenha o poligono 2 dentro da janela no buffer do dispositivo
