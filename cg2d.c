@@ -573,11 +573,11 @@ hobject * Skew(hobject * ob, float sx, float sy) {
   m->a32 = 0;
   m->a33 = 0;
 
-  oob = CreateObject(3);
+  oob = HCreateObject(3);
 
   for(i=0;i<ob->hnumbers_of_points;i++) {
-    SetObject(LinearTransf(m, 
-    SetPoint(
+    HSetObject(LinearTransf(m, 
+    HSetPoint(
       ob->hpoints[i].x, 
       ob->hpoints[i].y, 
       ob->hpoints[i].color)), oob);
