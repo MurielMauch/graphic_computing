@@ -18,13 +18,13 @@ point * SetPoint(float x, float y, int color) {
   return pnt;
   }
 
-hpoint * HSetPoint(float x, float y, float w, int color) {
+hpoint * HSetPoint(float x, float y, int color) {
   hpoint * hpnt;
   
   hpnt = (hpoint *) malloc(sizeof(hpoint)); 
   hpnt->x = x;
   hpnt->y = y;
-  hpnt->w = w;
+  hpnt->w = 1;
   hpnt->color = color;
   
   return hpnt;
@@ -225,7 +225,7 @@ hpoint *HInterX(hpoint *p1, hpoint *p2, float x)
 	else
 		aux = 1000000.0;
 
-	return HSetPoint(x, aux, 1, p1->color); // se w eh diferente de zero, divide xy por w
+	return HSetPoint(x, aux, p1->color); // se w eh diferente de zero, divide xy por w
 }
 
 point * InterY(point * p1, point * p2, float y) {
@@ -258,7 +258,7 @@ hpoint *HInterY(hpoint *p1, hpoint *p2, float y)
 	else
 		aux = p2->x;
 
-	return HSetPoint(aux, y, 1, p1->color);
+	return HSetPoint(aux, y, p1->color);
 }
 
 int DrawLine(point * p1, point * p2, window * win, bufferdevice * dev, int color) {
@@ -320,12 +320,16 @@ int HDrawLine(hpoint *p1, hpoint *p2, window *win, viewport *vp, bufferdevice *d
 {
 	float a, b;
 	int i, j, aux;
+  float w, h;
 	hpoint *pn1, *pd1, *pn2, *pd2;
 
 	pn1 = HSru2Srn(p1, win);
 	pd1 = HSrn2Srd(pn1, vp);
 	pn2 = HSru2Srn(p2, win);
 	pd2 = HSrn2Srd(pn2, vp);
+
+  w = vp->xmax - vp->xmin;
+  h = vp->ymax - vp->ymin;
 
 	if (pd1->x > pd2->x)
 	{
@@ -448,13 +452,11 @@ int HDrawObject(hobject *ob, window *win, viewport *vp, bufferdevice *dev)
 		p1 = HSetPoint(
 				ob->hpoints[i].x,
 				ob->hpoints[i].y,
-				ob->hpoints[i].w,
 				ob->hpoints[i].color
 			);
 		p2 = HSetPoint(
 				ob->hpoints[(i + 1) % ob->hnumbers_of_points].x, 
 				ob->hpoints[(i + 1) % ob->hnumbers_of_points].y, 
-				ob->hpoints[(i + 1) % ob->hnumbers_of_points].w, 
 				ob->hpoints[(i + 1) % ob->hnumbers_of_points].color
 			);
 
@@ -554,6 +556,35 @@ object * Scale(object * ob, float sx, float sy) {
     
   return oob;  
   }
+
+hobject * Skew(hobject * ob, float sx, float sy) {
+  hobject * oob;
+  hmatrix * m;
+  int i;
+
+  m = (hmatrix *)malloc(sizeof(hmatrix));
+  m->a11 = 1;
+  m->a12 = sx;
+  m->a13 = 0;
+  m->a21 = sy;
+  m->a22 = 1;
+  m->a23 = 0;
+  m->a31 = 0;
+  m->a32 = 0;
+  m->a33 = 0;
+
+  oob = CreateObject(3);
+
+  for(i=0;i<ob->hnumbers_of_points;i++) {
+    SetObject(LinearTransf(m, 
+    SetPoint(
+      ob->hpoints[i].x, 
+      ob->hpoints[i].y, 
+      ob->hpoints[i].color)), oob);
+  }
+
+  return oob;
+}
 
 hpoint * LinearTransf(hmatrix * m, hpoint * p) {
   hpoint * pt;

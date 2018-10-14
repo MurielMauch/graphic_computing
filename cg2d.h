@@ -104,7 +104,7 @@ object * CreateObject(int);
 int SetObject(point *, object *);
 
 /* cria pontos e objetos homogeneos no mundo */
-hpoint * HSetPoint(float, float, float, int);
+hpoint * HSetPoint(float, float, int);
 hobject * HCreateObject(int);
 int HSetObject(hpoint *, hobject *);
 
@@ -142,6 +142,7 @@ int HDrawObject(hobject *, window *, viewport *, bufferdevice *);
 object * Rotate(object *, float);
 object * Translate(object *, float, float);
 object * Scale(object *, float, float);
+hobject* Skew(hobject *, float, float);
 hpoint * LinearTransf(hmatrix *, hpoint *);
 hmatrix * ComposeMatrix(hmatrix *, hmatrix *);
 hmatrix * SetRotMatrix(float);
