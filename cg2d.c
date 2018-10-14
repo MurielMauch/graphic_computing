@@ -7,59 +7,31 @@ void SetWorld(float xmin, float xmax, float ymin, float ymax) {
  YWMin = ymin;
  }
 
-point * SetPoint(float x, float y, int color) {
-  point * pnt;
+hpoint * HSetPoint(float x, float y, int color) {
+  hpoint * pnt;
   
-  pnt = (point *) malloc(sizeof(point)); 
+  pnt = (hpoint *) malloc(sizeof(hpoint)); 
   pnt->x = x;
   pnt->y = y;
+  pnt->w = 1;
   pnt->color = color;
   
   return pnt;
   }
 
-hpoint * HSetPoint(float x, float y, int color) {
-  hpoint * hpnt;
-  
-  hpnt = (hpoint *) malloc(sizeof(hpoint)); 
-  hpnt->x = x;
-  hpnt->y = y;
-  hpnt->w = 1;
-  hpnt->color = color;
-  
-  return hpnt;
-  }
-
-object * CreateObject(int numbers_of_points) {
-  object * ob;
+hobject * HCreateObject(int numbers_of_points) {
+  hobject * ob;
  
-  ob = (object *) malloc(sizeof(object));
+  ob = (hobject *) malloc(sizeof(hobject));
   ob->numbers_of_points = 0;
-  ob->points = (point *) malloc(numbers_of_points*sizeof(point));
+  ob->points = (hpoint *) malloc(numbers_of_points*sizeof(hpoint));
  
   return ob;
   }
 
-hobject * HCreateObject(int hnumbers_of_points) {
-  hobject * hob;
- 
-  hob = (hobject *) malloc(sizeof(hobject));
-  hob->hnumbers_of_points = 0;
-  hob->hpoints = (hpoint *) malloc(hnumbers_of_points*sizeof(hpoint));
- 
-  return hob;
-  }
-
-int SetObject(point * pnt, object * ob) {
+int HSetObject(hpoint * pnt, hobject * ob) {
   ob->points[ob->numbers_of_points] = *pnt;
   ob->numbers_of_points = ob->numbers_of_points + 1;
-
-  return 0;
-  }
-
-int HSetObject(hpoint * hpnt, hobject * hob) {
-  hob->hpoints[hob->hnumbers_of_points] = *hpnt;
-  hob->hnumbers_of_points = hob->hnumbers_of_points + 1;
 
   return 0;
   }
@@ -68,9 +40,9 @@ object * ChangeColor(object * ob, int color) {
   object * oob;
   int i;
   
-  oob = CreateObject(ob->numbers_of_points); 
+  oob = HCreateObject(ob->numbers_of_points); 
   for(i=0;i<ob->numbers_of_points;i++) {
-    SetObject(SetPoint(ob->points[i].x,ob->points[i].y,color),oob);    
+    HSetObject(HSetPoint(ob->points[i].x,ob->points[i].y,color),oob);    
     }
     
   return oob;  
@@ -129,77 +101,36 @@ window * CreateWindow(float xmin, float xmax, float ymin, float ymax) {
   return win;
   }
 
-viewport *CreateViewport(int xmin, int xmax, int ymin, int ymax)
-{
-	viewport *vp;
+hpoint * Sru2Srn(hpoint * ponto, window * janela) {
+  hpoint * np;
 
-	vp = (viewport *)malloc(sizeof(viewport));
-	vp->xmin = xmin;
-	vp->xmax = xmax;
-	vp->ymin = ymin;
-	vp->ymax = ymax;
-
-	return vp;
-}
-
-point * Sru2Srn(point * ponto, window * janela) {
-  point * np;
-
-  np = (point *) malloc(sizeof(point));
+  np = (hpoint *) malloc(sizeof(hpoint));
   np->x = (ponto->x - janela->xmin)/(janela->xmax - janela->xmin);
   np->y = (ponto->y - janela->ymin)/(janela->ymax - janela->ymin);
+  np->w = ponto->w;
   np->color = ponto->color;
   
   return np;  
   }
 
-hpoint * HSru2Srn(hpoint * hponto, window * janela) {
-  hpoint * hnp;
+hpoint * Srn2Srd(hpoint * ponto, viewport * view) {
+  hpoint * dpt;
 
-  hnp = (hpoint *) malloc(sizeof(hpoint));
-  hnp->x = (hponto->x - janela->xmin)/(janela->xmax - janela->xmin);
-  hnp->y = (hponto->y - janela->ymin)/(janela->ymax - janela->ymin);
-  hnp->w = hponto->w;
-  hnp->color = hponto->color;
-  
-  return hnp;  
-  }
-
-point * Srn2Srd(point * ponto, bufferdevice * dev) {
-  point * dpt;
-
-  dpt = (point *) malloc(sizeof(point));
-  dpt->x = round((ponto->x)*(dev->MaxX - 1));
-  dpt->y = round((ponto->y)*(dev->MaxY - 1));
+  dpt = (hpoint *) malloc(sizeof(hpoint));
+  dpt->x = view->xmin + round((ponto->x)*(view->xmax - view->xmin - 1));
+  dpt->y = view->ymin + round((ponto->y)*(view->ymax - view->ymin - 1));
+  dpt->w = ponto->w;
   dpt->color = ponto->color;
  
   return dpt;
   }
 
-hpoint *HSrn2Srd(hpoint *ponto, viewport *vp) // d é deslocamento
-{
-	hpoint *dpt;
-
-	dpt = (hpoint *)malloc(sizeof(hpoint));
-	dpt->x = vp->xmin + round((ponto->x) * (vp->xmax - 1));
-	dpt->y = vp->ymin + round((ponto->y) * (vp->ymax - 1));
-	dpt->w = ponto->w;
-	dpt->color = ponto->color;
-
-	return dpt;
-}
-
 int InWin(point * pt, window * win) {
   if ((pt->x >= win->xmin)&&(pt->x <= win->xmax)&&(pt->y >= win->ymin)&&(pt->y <= win->ymax)) return 1;
   else return 0;
   }
-
-int HInWin(hpoint * pt, window * win) {
-  if ((pt->x >= win->xmin)&&(pt->x <= win->xmax)&&(pt->y >= win->ymin)&&(pt->y <= win->ymax)) return 1;
-  else return 0;
-  }
   
-point * InterX(point * p1, point * p2, float x) {
+hpoint * InterX(hpoint * p1, hpoint * p2, float x) {
  float a , b, aux;
  
  if (p2->x - p1->x) {
@@ -209,26 +140,10 @@ point * InterX(point * p1, point * p2, float x) {
    }
  else aux = 1000000.0;  
  
- return SetPoint(x,aux,p1->color);
+ return HSetPoint(x,aux,p1->color);
  }
 
-hpoint *HInterX(hpoint *p1, hpoint *p2, float x)
-{
-	float a, b, aux;
-
-	if (p2->x - p1->x)
-	{
-		a = (p2->y - p1->y) / (p2->x - p1->x); // equaçao da reta
-		b = p1->y - a * p1->x; // termo independente
-		aux = a * x + b;
-	}
-	else
-		aux = 1000000.0;
-
-	return HSetPoint(x, aux, p1->color); // se w eh diferente de zero, divide xy por w
-}
-
-point * InterY(point * p1, point * p2, float y) {
+hpoint * InterY(hpoint * p1, hpoint * p2, float y) {
  float a , b, aux;
 
  if (p2->x - p1->x) {
@@ -239,37 +154,22 @@ point * InterY(point * p1, point * p2, float y) {
    }
  else aux = p2->x;
  
- return SetPoint(aux,y,p1->color);
+ return HSetPoint(aux,y,p1->color);
  }
 
-hpoint *HInterY(hpoint *p1, hpoint *p2, float y)
-{
-	float a, b, aux;
-
-	if (p2->x - p1->x)
-	{
-		a = (p2->y - p1->y) / (p2->x - p1->x);
-		b = p1->y - a * p1->x;
-		if (a)
-			aux = (y - b) / a;
-		else
-			aux = 1000000.0;
-	}
-	else
-		aux = p2->x;
-
-	return HSetPoint(aux, y, p1->color);
-}
-
-int DrawLine(point * p1, point * p2, window * win, bufferdevice * dev, int color) {
+int DrawLine(hpoint * p1, hpoint * p2, window * win, bufferdevice * dev, viewport * view, int color) {
   float a, b;
   int i, j, aux;
-  point * pn1, * pd1, * pn2, * pd2;
+  float w, h;
+  hpoint * pn1, * pd1, * pn2, * pd2;
   
   pn1 = Sru2Srn(p1,win);
-  pd1 = Srn2Srd(pn1,dev);
+  pd1 = Srn2Srd(pn1,view);
   pn2 = Sru2Srn(p2,win);
-  pd2 = Srn2Srd(pn2,dev);
+  pd2 = Srn2Srd(pn2,view);
+
+  w = view->xmax - view->xmin;
+  h = view->ymax - view->ymin;
   
   if (pd1->x > pd2->x) {
     aux = pd1->x;
@@ -316,82 +216,17 @@ int DrawLine(point * p1, point * p2, window * win, bufferdevice * dev, int color
   return 0;
   }
 
-int HDrawLine(hpoint *p1, hpoint *p2, window *win, viewport *vp, bufferdevice *dev, int color)
-{
-	float a, b;
-	int i, j, aux;
-  float w, h;
-	hpoint *pn1, *pd1, *pn2, *pd2;
-
-	pn1 = HSru2Srn(p1, win);
-	pd1 = HSrn2Srd(pn1, vp);
-	pn2 = HSru2Srn(p2, win);
-	pd2 = HSrn2Srd(pn2, vp);
-
-  w = vp->xmax - vp->xmin;
-  h = vp->ymax - vp->ymin;
-
-	if (pd1->x > pd2->x)
-	{
-		aux = pd1->x;
-		pd1->x = pd2->x;
-		pd2->x = aux;
-		aux = pd1->y;
-		pd1->y = pd2->y;
-		pd2->y = aux;
-	}
-
-	i = pd1->x;
-	j = pd1->y;
-
-	if (pd1->x == pd2->x)
-	{
-		while (j < pd2->y)
-		{
-			dev->buffer[(dev->MaxY - j - 1) * dev->MaxX + i] = color;
-			j++;
-		}
-	}
-	else
-	{
-		a = (pd2->y - pd1->y) / (pd2->x - pd1->x);
-		b = pd1->y - a * pd1->x;
-		while (i < pd2->x)
-		{
-			dev->buffer[(dev->MaxY - j - 1) * dev->MaxX + i] = color;
-			aux = j;
-			j = round(a * (++i) + b);
-
-			if (j > aux)
-			{
-				while (aux < j)
-				{
-					dev->buffer[(dev->MaxY - aux - 1) * dev->MaxX + i] = color;
-					aux++;
-				}
-			}
-			if (j < aux)
-			{
-				while (aux > j)
-				{
-					dev->buffer[(dev->MaxY - aux - 1) * dev->MaxX + i] = color;
-					aux--;
-				}
-			}
-		}
-	}
-
-	return 0;
-}
-
-int DrawObject(object * ob, window * win, bufferdevice * dev) {
+int DrawObject(hobject * ob, window * win, bufferdevice * dev, viewport * view) {
   int i;
   float aux;
-  point * p1, * p2, * paux;
+  hpoint * p1, * p2, * paux;
   
   for(i=0;i<ob->numbers_of_points;i++) {
-    p1 = SetPoint(ob->points[i].x,ob->points[i].y,ob->points[i].color);
-    p2 = SetPoint(ob->points[(i+1)%ob->numbers_of_points].x,ob->points[(i+1)%ob->numbers_of_points].y,ob->points[(i+1)%ob->numbers_of_points].color);
+    p1 = HSetPoint(
+      ob->points[i].x,
+      ob->points[i].y,
+      ob->points[i].color);
+    p2 = HSetPoint(ob->points[(i+1)%ob->numbers_of_points].x,ob->points[(i+1)%ob->numbers_of_points].y,ob->points[(i+1)%ob->numbers_of_points].color);
     
     if (p1->y > p2->y) {
       aux = p1->y;
@@ -435,89 +270,11 @@ int DrawObject(object * ob, window * win, bufferdevice * dev) {
         } 
       }
 
-    if ((InWin(p1,win))&&(InWin(p2,win))) DrawLine(p1,p2,win,dev,p1->color);
+    if ((InWin(p1,win))&&(InWin(p2,win))) DrawLine(p1,p2,win,dev,view,p1->color);
     }
 
   return 0;
   }
-
-int HDrawObject(hobject *ob, window *win, viewport *vp, bufferdevice *dev)
-{
-	int i;
-	float aux;
-	hpoint *p1, *p2, *paux;
-
-	for (i = 0; i < ob->hnumbers_of_points; i++)
-	{
-		p1 = HSetPoint(
-				ob->hpoints[i].x,
-				ob->hpoints[i].y,
-				ob->hpoints[i].color
-			);
-		p2 = HSetPoint(
-				ob->hpoints[(i + 1) % ob->hnumbers_of_points].x, 
-				ob->hpoints[(i + 1) % ob->hnumbers_of_points].y, 
-				ob->hpoints[(i + 1) % ob->hnumbers_of_points].color
-			);
-
-		if (p1->y > p2->y)
-		{
-			aux = p1->y;
-			p1->y = p2->y;
-			p2->y = aux;
-			aux = p1->x;
-			p1->x = p2->x;
-			p2->x = aux;
-		}
-		if ((p1->y < win->ymax) && (p2->y > win->ymax))
-		{
-			paux = HInterY(p1, p2, win->ymax);
-			if (HInWin(paux, win))
-			{
-				p2 = paux;
-			}
-		}
-		if ((p1->y < win->ymin) && (p2->y > win->ymin))
-		{
-			paux = HInterY(p1, p2, win->ymin);
-			if (HInWin(paux, win))
-			{
-				p1 = paux;
-			}
-		}
-
-		if (p1->x > p2->x)
-		{
-			aux = p1->y;
-			p1->y = p2->y;
-			p2->y = aux;
-			aux = p1->x;
-			p1->x = p2->x;
-			p2->x = aux;
-		}
-		if ((p1->x < win->xmax) && (p2->x > win->xmax))
-		{
-			paux = HInterX(p1, p2, win->xmax);
-			if (HInWin(paux, win))
-			{
-				p2 = paux;
-			}
-		}
-		if ((p1->x < win->xmin) && (p2->x > win->xmin))
-		{
-			paux = HInterX(p1, p2, win->xmin);
-			if (HInWin(paux, win))
-			{
-				p1 = paux;
-			}
-		}
-
-		if ((HInWin(p1, win)) && (HInWin(p2, win)))
-			HDrawLine(p1, p2, win, vp, dev, p1->color);
-	}
-
-	return 0;
-}
 
 object * Rotate(object * ob, float theta) {
   object * oob;
@@ -525,9 +282,9 @@ object * Rotate(object * ob, float theta) {
   float phi;
   
   phi = (theta*PI)/180.0;
-  oob = CreateObject(ob->numbers_of_points); 
+  oob = HCreateObject(ob->numbers_of_points); 
   for(i=0;i<ob->numbers_of_points;i++) {
-    SetObject(SetPoint((ob->points[i].x)*cos(phi)-(ob->points[i].y)*sin(phi),(ob->points[i].x)*sin(phi)+(ob->points[i].y)*cos(phi),ob->points[i].color),oob);    
+    HSetObject(HSetPoint((ob->points[i].x)*cos(phi)-(ob->points[i].y)*sin(phi),(ob->points[i].x)*sin(phi)+(ob->points[i].y)*cos(phi),ob->points[i].color),oob);    
     }
     
   return oob;
@@ -537,9 +294,9 @@ object * Translate(object * ob, float x, float y) {
   object * oob;
   int i;
   
-  oob = CreateObject(ob->numbers_of_points); 
+  oob = HCreateObject(ob->numbers_of_points); 
   for(i=0;i<ob->numbers_of_points;i++) {
-    SetObject(SetPoint(ob->points[i].x + x,ob->points[i].y + y,ob->points[i].color),oob);    
+    HSetObject(HSetPoint(ob->points[i].x + x,ob->points[i].y + y,ob->points[i].color),oob);    
     }
     
   return oob;
@@ -549,9 +306,9 @@ object * Scale(object * ob, float sx, float sy) {
   object * oob;
   int i;
   
-  oob = CreateObject(ob->numbers_of_points); 
+  oob = HCreateObject(ob->numbers_of_points); 
   for(i=0;i<ob->numbers_of_points;i++) {
-    SetObject(SetPoint(sx*(ob->points[i].x),sy*(ob->points[i].y),ob->points[i].color),oob);    
+    HSetObject(HSetPoint(sx*(ob->points[i].x),sy*(ob->points[i].y),ob->points[i].color),oob);    
     }
     
   return oob;  
@@ -575,12 +332,8 @@ hobject * Skew(hobject * ob, float sx, float sy) {
 
   oob = HCreateObject(3);
 
-  for(i=0;i<ob->hnumbers_of_points;i++) {
-    HSetObject(LinearTransf(m, 
-    HSetPoint(
-      ob->hpoints[i].x, 
-      ob->hpoints[i].y, 
-      ob->hpoints[i].color)), oob);
+  for(i=0;i<ob->numbers_of_points;i++) {
+    HSetObject(LinearTransf(m, HSetPoint(ob->points[i].x, ob->points[i].y, ob->points[i].color)), oob);
   }
 
   return oob;
@@ -594,6 +347,7 @@ hpoint * LinearTransf(hmatrix * m, hpoint * p) {
   pt->x = m->a11*p->x + m->a12*p->y + m->a13*p->w;
   pt->y = m->a21*p->x + m->a22*p->y + m->a23*p->w;
   pt->w = m->a31*p->x + m->a32*p->y + m->a33*p->w;
+  pt->color = p->color;
   
   return pt;
   }
@@ -805,4 +559,5 @@ int Dump2X(bufferdevice * dev, palette * pal) {
  
   return ret;
   }
+
 

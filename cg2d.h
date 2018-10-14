@@ -24,14 +24,14 @@ struct Window {
       
 typedef struct Window window;
 
-typedef struct ViewPort {
+struct ViewPort {
   int xmin,
       xmax,
       ymin,
       ymax;
-      } viewport;
+      };
       
-// typedef struct Viewport viewport;
+typedef struct ViewPort viewport;
 
 struct Point2D {
   float x,
@@ -41,28 +41,12 @@ struct Point2D {
       
 typedef struct Point2D point;
 
-struct HPoint2D {
-  float x,
-        y,
-        w;
-  int   color;
-        };
-
-typedef struct HPoint2D hpoint;
-
 struct Object2D {
   int numbers_of_points;
   point * points;
   };
   
 typedef struct Object2D object; 
-
-struct HObject2D {
-  int hnumbers_of_points;
-  hpoint * hpoints;
-  };
-  
-typedef struct HObject2D hobject; 
 
 struct Color {
   float red,
@@ -87,6 +71,22 @@ struct Buffer {
 
 typedef struct Buffer bufferdevice;
 
+struct HPoint2D {
+  float x,
+        y,
+        w;
+  int   color;
+        };
+
+typedef struct HPoint2D hpoint;
+
+struct HObject2D {
+  int       numbers_of_points;
+  hpoint *  points;
+  };
+
+typedef struct HObject2D hobject;
+
 struct HMatrix2D {
   float a11, a12, a13,
         a21, a22, a23,
@@ -99,25 +99,15 @@ typedef struct HMatrix2D hmatrix;
 void SetWorld(float, float, float, float);
 
 /* cria pontos e objetos no mundo */
-point * SetPoint(float, float, int);
-object * CreateObject(int);
-int SetObject(point *, object *);
-
-/* cria pontos e objetos homogeneos no mundo */
 hpoint * HSetPoint(float, float, int);
 hobject * HCreateObject(int);
 int HSetObject(hpoint *, hobject *);
 
 /* sistemas de referências */
 window * CreateWindow(float, float, float, float);
-point * Sru2Srn(point *, window *);
+hpoint * Sru2Srn(hpoint *, window *);
 bufferdevice * CreateBuffer(int, int);
-point * Srn2Srd(point *, bufferdevice *);
-
-/* sistemas de referências com coordenadas homogeneas*/
-viewport *CreateViewport(int, int, int, int);
-hpoint * HSru2Srn(hpoint *, window *);
-hpoint * HSrn2Srd(hpoint *, viewport *);
+hpoint * Srn2Srd(hpoint *,viewport *);
 
 /* funções para criar e gerenciar uma 
    paleta e cores */
@@ -128,15 +118,9 @@ object * ChangeColor(object *, int);
 
 /* funções para conversão matricial 
    e preenchimento de objetos */
-int DrawLine(point *, point *, window *, bufferdevice *, int);
-int DrawObject(object *, window *, bufferdevice *);
+int DrawLine(hpoint *, hpoint *, window *, bufferdevice *, viewport *, int);
+int DrawObject(hobject *, window *, bufferdevice *, viewport *);
 int Fill(object *, window *, bufferdevice *, int);
-
-/* funções para conversão matricial 
-   e preenchimento de objetos com coordenadas
-   homogeneas */
-int HDrawLine(hpoint *, hpoint *, window *, viewport *, bufferdevice *, int);
-int HDrawObject(hobject *, window *, viewport *, bufferdevice *);
 
 /* operações com objetos no mundo */
 object * Rotate(object *, float);
@@ -151,4 +135,5 @@ hmatrix * SetSftMatrix(float, float);
 
 /* visualiza o buffer (SRD) no monitor virtual */
 int Dump2X(bufferdevice *, palette *);
+
 
