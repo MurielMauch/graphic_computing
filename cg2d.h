@@ -122,7 +122,7 @@ int DrawLine(hpoint *, hpoint *, window *, bufferdevice *, viewport *, int);
 int DrawObject(hobject *, window *, bufferdevice *, viewport *);
 int Fill(object *, window *, bufferdevice *, int);
 
-int DrawBorder(window *, bufferdevice *, viewport *);
+int DrawBorder(bufferdevice *, viewport *);
 
 /* operações com objetos no mundo */
 object * Rotate(object *, float);

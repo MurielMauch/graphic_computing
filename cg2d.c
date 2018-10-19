@@ -216,8 +216,18 @@ int DrawLine(hpoint * p1, hpoint * p2, window * win, bufferdevice * dev, viewpor
   return 0;
   }
 
-int DrawBorder(window * win, bufferdevice * dev, viewport * view){
+int DrawBorder(bufferdevice * dev, viewport * view){
+  
+  /*
+   * [(xmin, ymin),(xmax,ymax)]
+   * [(xmin,ymax),(xmax,ymin)] 
+  */
 
+  /*
+  * for (i=xmin, i<xmax, i++){
+  *   dev->x[i] = 1;
+  * }
+  */
 }
 
 int DrawObject(hobject * ob, window * win, bufferdevice * dev, viewport * view) {

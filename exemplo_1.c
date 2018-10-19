@@ -24,12 +24,13 @@
 int main(int argc, char ** argv) {
     palette * palheta;
     bufferdevice * dispositivo;
-    viewport * view, * view1, * view2, * view3;
-    window * janela, * janela1, * janela2, * janela3;
+    viewport * view, * view1, * view2, * view3, * view4;
+    window * janela, * janela1, * janela2, * janela3, * janela4;
     hobject * poligono1, * poligono2;
     hobject * poligono3, * poligono4, * poligono5, * poligono6;
     hobject * poligono7, * poligono8, * poligono9, * poligono10;
     hobject * poligono11, * poligono12, * poligono13, * poligono14;
+    hobject * poligono15, * poligono16, * poligono17;
     
     SetWorld(-20, 20, -20, 20); 
     dispositivo = CreateBuffer(1024,768);
@@ -80,6 +81,8 @@ int main(int argc, char ** argv) {
 
     DrawObject(poligono1, janela, dispositivo, view);  // exterior
     DrawObject(poligono2, janela, dispositivo, view);  // interior
+
+    DrawBorder(dispositivo, view);
 
     /**
      * second
@@ -177,6 +180,66 @@ int main(int argc, char ** argv) {
     DrawObject(poligono13, janela3, dispositivo, view3);  // exterior
     DrawObject(poligono14, janela3, dispositivo, view3);  // interior
 
+    poligono11 = HCreateObject(7);
+    poligono12 = HCreateObject(3);
+
+    HSetObject(HSetPoint(-6.0,1.0,1), poligono11);
+    HSetObject(HSetPoint(-11.0,-9.0,1), poligono11);
+    HSetObject(HSetPoint(-9.0,-9.0,1), poligono11);
+    HSetObject(HSetPoint(-8.0,-7.0,1), poligono11);
+    HSetObject(HSetPoint(-4.0,-7.0,1), poligono11);
+    HSetObject(HSetPoint(-3.0,-9.0,1), poligono11);
+    HSetObject(HSetPoint(-1.0,-9.0,1), poligono11);
+
+    HSetObject(HSetPoint(-8.0,-6.0,1), poligono12);
+    HSetObject(HSetPoint(-4.0,-6.0,1), poligono12);
+    HSetObject(HSetPoint(-6.0,-3.0,1), poligono12);
+
+    poligono1 = Skew(poligono11, 0.2, 0.2);
+    poligono14 = Skew(poligono12, 0.2, 0.2);
+
+    janela3 = CreateWindow(-15.0,2.0,-15.0,2.0);
+
+    DrawObject(poligono13, janela3, dispositivo, view3);  // exterior
+    DrawObject(poligono14, janela3, dispositivo, view3);  // interior
+
+    /**
+     * b
+    */
+
+    poligono15 = HCreateObject(4);
+	poligono16 = HCreateObject(4);
+	poligono17 = HCreateObject(4);
+
+	// Parte externa
+	HSetObject(HSetPoint(-10.0, -0.0, 2), poligono15);
+	HSetObject(HSetPoint(-10.0, -10.0, 2), poligono15);
+	HSetObject(HSetPoint(-10.1, -10.0, 2), poligono15);
+	HSetObject(HSetPoint(-10.1, -0.0, 2), poligono15);
+
+	// B upper
+	HSetObject(HSetPoint(-10.1, -0.0, 2), poligono16);
+	HSetObject(HSetPoint(-10.1, -5.0, 2), poligono16);
+	HSetObject(HSetPoint(-5.1, -3.0, 2), poligono16);
+	HSetObject(HSetPoint(-5.1, -2.0, 2), poligono16);
+	
+	// B lower
+	HSetObject(HSetPoint(-10.1, -5.0, 2), poligono17);
+	HSetObject(HSetPoint(-10.1, -10.0, 2), poligono17);
+	HSetObject(HSetPoint(-5.1, -8.0, 2), poligono17);
+	HSetObject(HSetPoint(-5.1, -7.0, 2), poligono17);
+
+    view4 = (viewport *)malloc(sizeof(viewport));
+    view4->xmin = 650;
+    view4->xmax = 900;
+    view4->ymin = 0;
+    view4->ymax = 250;
+
+    janela4 = CreateWindow(-15.0,2.0,-15.0,2.0);
+
+    DrawObject(poligono15, janela4, dispositivo, view4);  // exterior
+    DrawObject(poligono16, janela4, dispositivo, view4);  // interior
+    DrawObject(poligono17, janela4, dispositivo, view4);  // interior
 
     Dump2X(dispositivo,palheta);
     
