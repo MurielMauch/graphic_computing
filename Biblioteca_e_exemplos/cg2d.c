@@ -304,6 +304,60 @@ int DrawObject(object * ob, window * win, viewport * port, bufferdevice * dev, i
   return 0;
   }
 
+/* Preenchimento de poligono */
+int FillObj(bufferdevice *buf, int color) {
+	int cont_1, cont_2;
+  // a variavel isInside indica se esta dentro do poligono
+  int isInside;  
+  for (cont_1 = 1; cont_1 < buf->MaxY-1; cont_1++) {
+    // sempre que começa uma nova linha quer dizer que esta FORA do poligono
+    isInside=0;
+		for (cont_2 = 1; cont_2 < buf->MaxX-1; cont_2++) {
+      //Ao encontrar a primeira borda, estamos dentro do poligono. Ao encontrar outra borda, estamos saindo do poligono
+      if(buf->buffer[cont_1 * buf->MaxX + cont_2]!=0 || buf->buffer[(cont_1+1) * buf->MaxX + cont_2]!=0) {
+        isInside++;
+        continue;
+      }
+
+      if(isInside == 1) {
+         buf->buffer[cont_1 * buf->MaxX + cont_2] = color;
+      } else if(isInside > 1) {
+        break;
+      }
+
+		}
+	}
+	return 0;
+}
+
+int Fill(object *ob, window *win, viewport *vp, bufferdevice *dev, int color)
+{
+	// Cria buffer temporário
+	bufferdevice *temp = CreateBuffer(dev->MaxX, dev->MaxY);
+	// Desenha objeto
+	DrawObject(ob, win, vp, temp, color);
+	// Preenche
+	FillObj(temp, color);
+	// Retorna ao buffer normal
+	CpToDifferentBuffer(temp, dev);
+
+	return 0;
+}
+
+void CpToDifferentBuffer(bufferdevice *temp_buffer, bufferdevice *dev)
+{
+	int i, j;
+	for (i = 0; i < temp_buffer->MaxY; i++)
+	{
+		for (j = 0; j < temp_buffer->MaxX; j++)
+		{
+			if (temp_buffer->buffer[i * temp_buffer->MaxX + j] != 0)
+				dev->buffer[i * dev->MaxX + j] = temp_buffer->buffer[i * temp_buffer->MaxX + j];
+		}
+	}
+}
+
+
 matrix * SetRotMatrix(float theta) {
   matrix * m;
 

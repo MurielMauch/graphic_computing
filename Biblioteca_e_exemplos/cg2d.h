@@ -111,6 +111,9 @@ bufferdevice * CreateBuffer(int, int);
 int DrawViewPort(viewport *, bufferdevice *, int);
 int DrawLine(point *, point *, window *, viewport *, bufferdevice *, int);
 int DrawObject(object *, window *, viewport *, bufferdevice *, int);
+int FillObj(bufferdevice *, int);
+int Fill(object *, window *, viewport *, bufferdevice *, int);
+void CpToDifferentBuffer(bufferdevice *, bufferdevice *);
 
 /* Construção das matrizes homogêneas para as operações lineares */
 matrix * SetRotMatrix(float);
