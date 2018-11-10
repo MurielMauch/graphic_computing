@@ -249,7 +249,7 @@ int DrawObject(object * ob, window * win, viewport * port, bufferdevice * dev, i
   // O uso dessa função foi sugerido pelo professor
   // como alternativa e foi implementada nesta versão
   // para fins de ilustração 
-  DrawViewPort(port,dev,1);
+  // DrawViewPort(port,dev,1);
   
   for(i=0;i<ob->numbers_of_points;i++) {
     p1 = SetPoint(ob->points[i].x,ob->points[i].y,ob->points[i].w,ob->points[i].color);
@@ -298,7 +298,7 @@ int DrawObject(object * ob, window * win, viewport * port, bufferdevice * dev, i
       }
 
     if ((InWin(p1,win))&&(InWin(p2,win)))
-	DrawLine(p1,p2,win,port,dev,color);
+	    DrawLine(p1,p2,win,port,dev,color);
     }
 
   return 0;
@@ -309,20 +309,32 @@ int FillObj(bufferdevice *buf, int color) {
 	int cont_1, cont_2;
   // a variavel isInside indica se esta dentro do poligono
   int isInside;  
+  int isIntersection;
   for (cont_1 = 1; cont_1 < buf->MaxY-1; cont_1++) {
-    // sempre que começa uma nova linha quer dizer que esta FORA do poligono
+    // sempre que começa uma nova linha quer dizer que esta FORA do poligono e fora de uma interseção
     isInside=0;
+    isIntersection=0;
 		for (cont_2 = 1; cont_2 < buf->MaxX-1; cont_2++) {
       //Ao encontrar a primeira borda, estamos dentro do poligono. Ao encontrar outra borda, estamos saindo do poligono
-      if(buf->buffer[cont_1 * buf->MaxX + cont_2]!=0 || buf->buffer[(cont_1+1) * buf->MaxX + cont_2]!=0) {
+      //achou uma borda, incrementa x
+      if(buf->buffer[cont_1 * buf->MaxX + cont_2]==color) {
         isInside++;
-        continue;
+        cont_2++;
       }
-
-      if(isInside == 1) {
-         buf->buffer[cont_1 * buf->MaxX + cont_2] = color;
-      } else if(isInside > 1) {
+      // se está dentro e a nova posição é preta, pinta
+      if(isInside == 1 && (buf->buffer[cont_1 * buf->MaxX + cont_2] == 0)) {
+        buf->buffer[cont_1 * buf->MaxX + cont_2] = color;
+        continue;
+      } else if(isInside == 1 && (buf->buffer[cont_1 * buf->MaxX + cont_2] == color)) {
+        // enquanto a entrada for colorida e seu pixel acima for da mesma cor
+        while (buf->buffer[cont_1 * buf->MaxX + cont_2] == color && buf->buffer[(cont_1-1) * buf->MaxX + cont_2] == color){
+          cont_2++;
+        }
+        cont_2--;
+        continue;
+      }else if(isInside > 1) {
         break;
+        // buf->buffer[cont_1 * buf->MaxX + cont_2] = color;
       }
 
 		}
@@ -337,9 +349,9 @@ int Fill(object *ob, window *win, viewport *vp, bufferdevice *dev, int color)
 	// Desenha objeto
 	DrawObject(ob, win, vp, temp, color);
 	// Preenche
-	FillObj(temp, color);
+	FillObj(dev, color);
 	// Retorna ao buffer normal
-	CpToDifferentBuffer(temp, dev);
+	// CpToDifferentBuffer(temp, dev);
 
 	return 0;
 }
