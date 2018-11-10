@@ -471,6 +471,56 @@ object * TransObj(object * ob, matrix * m) {
   return obj;
   }
 
+/* Rotação do objeto */
+object * RotateObj(object * ob, float theta) {
+  int i;
+  object * obj;
+  float phi;
+  
+  phi = (theta*M_PI)/180.0;
+  obj = CreateObject(ob->numbers_of_points); 
+  for(i=0;i<ob->numbers_of_points;i++) {
+    SetObject(SetPoint((ob->points[i].x)*cos(phi)-(ob->points[i].y)*sin(phi),
+                      (ob->points[i].x)*sin(phi)+(ob->points[i].y)*cos(phi),
+                      ob->points[i].w,
+                      ob->points[i].color),obj);    
+    }
+    
+  return obj;
+ }
+
+/* Escala do objeto */
+object * ScaleObj(object * ob, float sx, float sy) {
+  int i;
+  object * obj;
+
+  obj = CreateObject(ob->numbers_of_points); 
+  for(i=0;i<ob->numbers_of_points;i++) {
+    SetObject(SetPoint(sx*(ob->points[i].x),
+                      sy*(ob->points[i].y),
+                      ob->points[i].w,
+                      ob->points[i].color),obj);    
+    }
+    
+  return obj;  
+  }
+
+  /* Translação do objeto */
+  object * TranslateObj(object * ob, float x, float y) {
+    int i;
+  object * obj;
+  
+  obj = CreateObject(ob->numbers_of_points); 
+  for(i=0;i<ob->numbers_of_points;i++) {
+    SetObject(SetPoint(ob->points[i].x + x,
+                      ob->points[i].y + y,
+                      ob->points[i].w,
+                      ob->points[i].color),obj);    
+    }
+    
+  return obj;
+  }
+
 int Dump2X(bufferdevice * dev, palette * pal) {
   Display               * display;
   XImage                * ximage;

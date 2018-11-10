@@ -125,6 +125,9 @@ matrix * ComposeMatrix(matrix *, matrix *);
 
 /* Operações lineares sobre objetos no SRU 2D */
 object * TransObj(object *, matrix *);
+object * RotateObj(object *, float);
+object * ScaleObj(object *, float, float);
+object * TranslateObj(object *, float, float);
 
 /* Visualiza o buffer (SRD) no monitor virtual */
 int Dump2X(bufferdevice *, palette *);
