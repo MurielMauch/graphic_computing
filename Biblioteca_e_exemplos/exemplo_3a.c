@@ -21,7 +21,6 @@ int main(int argc, char ** argv) {
   SetColor(1,0,0,palheta);
   SetColor(0,1,0,palheta);
   SetColor(0,0,1,palheta);
-  SetColor(1,1,1,palheta);
   
   poligono1 = CreateObject(5);
   poligono2 = CreateObject(4);
@@ -40,7 +39,7 @@ int main(int argc, char ** argv) {
   // Rotação do poligono1
   poligono3 = RotateObj(poligono1, 75);
   /* O efeito colateral da rotação é a translação do objeto, pois a rotação
-  ocorre em torno da origem e, neste caso, o objeto nao está na origem */
+  ocorre em torno da origem e, neste caso, o objeto não está na origem */
 
   janela = CreateWindow(-6.0, -5.0, 0.0, 0.0);
   porta = CreateViewPort(215, 95 , 470, 340); // 300x200

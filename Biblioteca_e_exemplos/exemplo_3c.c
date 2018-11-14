@@ -1,7 +1,3 @@
-// Uma possível solução para a atividade exemplo disponibilizada
-// no Moodle utizando as funções da biblioteca implementada
-// (item f da primeira atividade avaliativa)
-
 // Para executar:
 // gcc -c cg2d.c
 // gcc exemplo_3c.c -o exemplo_3c cg2d.o -lm -lX11
@@ -26,7 +22,6 @@ int main(int argc, char **argv)
   SetColor(1, 0, 0, palheta);
   SetColor(0, 1, 0, palheta);
   SetColor(0, 0, 1, palheta);
-  SetColor(1, 1, 1, palheta);
   SetColor(1, 0, 1, palheta);
 
   poligono1 = CreateObject(5);
@@ -46,7 +41,7 @@ int main(int argc, char **argv)
   janela = CreateWindow(-10.0, -10.0, 0.0, 0.0);
   porta = CreateViewPort(0, 0, 639, 479);
 
-  FillIntersection(poligono1, poligono2, janela, porta, monitor, 1, 3, 2);
+  FillIntersection(poligono1, poligono2, janela, porta, monitor, 1, 3, 4);
 
   Dump2X(monitor, palheta);
 

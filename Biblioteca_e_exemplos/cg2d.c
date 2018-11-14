@@ -285,7 +285,7 @@ int DrawObject(object *ob, window *win, viewport *port, bufferdevice *dev, int c
   // O uso dessa função foi sugerido pelo professor
   // como alternativa e foi implementada nesta versão
   // para fins de ilustração
-  // DrawViewPort(port,dev,1);
+  DrawViewPort(port,dev,1);
 
   for (i = 0; i < ob->numbers_of_points; i++)
   {

@@ -12,6 +12,7 @@ int main(int argc, char ** argv) {
   window * janela;
   viewport * porta;
   object * poligono1, * poligono2, * poligono3;
+  point * point;
   
   SetWorld(-20, -20, 10, 15); // Define o tamanho do mundo  
   monitor = CreateBuffer(640,480); // Cria um monitor virtual
@@ -21,7 +22,6 @@ int main(int argc, char ** argv) {
   SetColor(1,0,0,palheta);
   SetColor(0,1,0,palheta);
   SetColor(0,0,1,palheta);
-  SetColor(1,1,1,palheta);
   
   poligono1 = CreateObject(5);
   poligono2 = CreateObject(4);
@@ -37,18 +37,13 @@ int main(int argc, char ** argv) {
   SetObject(SetPoint(-1.0,-2.0,1,3), poligono2);
   SetObject(SetPoint(-1.0,-6.0,1,3), poligono2);
   SetObject(SetPoint(-6.0,-6.0,1,3), poligono2);
-
-  SetObject(SetPoint(-6.0,-2.0,1,3), poligono3);
-  SetObject(SetPoint(-1.0,-2.0,1,3), poligono3);
-  SetObject(SetPoint(-1.0,-6.0,1,3), poligono3);
-  SetObject(SetPoint(-6.0,-6.0,1,3), poligono3);
   
-  // Translação para centralizar a figura 
+  // Translação para centralizar a figura
   poligono1 = TranslateObj(poligono1, 5.0, 5.0);
   poligono2 = TranslateObj(poligono2, 5.0, 5.0);
 
   // Traslação do polinogo3 para a origem
-  poligono3 = TranslateObj(poligono3, 6.0, 6.0);
+  poligono3 = TranslateObj(poligono2, 1.0, 1.0);
   // Rotação do poligono3
   poligono3 = RotateObj(poligono3, 45);
   // Translação do poligono3 para as coordenadas iniciais
