@@ -137,6 +137,7 @@ object *TransObj(object *, matrix *);
 object *RotateObj(object *, float);
 object *ScaleObj(object *, float, float);
 object *TranslateObj(object *, float, float);
+int CenterObj(object *, object *, window *);
 
 /* Visualiza o buffer (SRD) no monitor virtual */
 int Dump2X(bufferdevice *, palette *);

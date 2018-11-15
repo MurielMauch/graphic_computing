@@ -37,10 +37,6 @@ int main(int argc, char ** argv) {
   SetObject(SetPoint(-1.0,-2.0,1,3), poligono2);
   SetObject(SetPoint(-1.0,-6.0,1,3), poligono2);
   SetObject(SetPoint(-6.0,-6.0,1,3), poligono2);
-  
-  // Translação para centralizar a figura
-  poligono1 = TranslateObj(poligono1, 5.0, 5.0);
-  poligono2 = TranslateObj(poligono2, 5.0, 5.0);
 
   // Traslação do polinogo3 para a origem
   poligono3 = TranslateObj(poligono2, 1.0, 1.0);
@@ -56,6 +52,8 @@ int main(int argc, char ** argv) {
 
   janela = CreateWindow(-2.0, -2.0, 2.0, 2.0);
   porta = CreateViewPort(215, 95, 470, 340); // 300x200
+
+  CenterObj(poligono1, poligono2, janela);
   
   DrawObject(poligono1,janela,porta,monitor,1);
   DrawObject(poligono2,janela,porta,monitor,3);

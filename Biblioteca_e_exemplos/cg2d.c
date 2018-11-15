@@ -1,5 +1,8 @@
 #include "cg2d.h"
 
+#define max(x, y) (((x) > (y)) ? (x) : (y))
+#define min(x, y) (((x) < (y)) ? (x) : (y))
+
 void SetWorld(float xmin, float ymin, float xmax, float ymax)
 {
   XWMax = xmax;
@@ -433,6 +436,9 @@ int FillIntersection(object *obA, object *obB, window *win, viewport *vp, buffer
       buf->buffer[cont_1 * buf->MaxX + cont_3] = colorI;
     }
 
+    printf("%d\n", minB);
+    printf("%d\n", maxA);
+
     // variantes
     // A uniao B = minA ate maxB
     // A e nao B = minA ate minB
@@ -650,6 +656,80 @@ object *TranslateObj(object *ob, float x, float y)
   }
 
   return obj;
+}
+
+int internoSegmento(point a, point b, point c) { 
+	if (b.x <= max(a.x, c.x) && b.x >= min(a.x, c.x) && 
+			b.y <= max(a.y, c.y) && b.y >= min(a.y, c.y)) 
+		return 1; 
+	return 0; 
+} 
+
+int orientacao(point a, point b, point c) { 
+	int val = (b.y - a.y) * (c.x - b.x) - 
+			(b.x - a.x) * (c.y - b.y); 
+
+	if (val == 0) return 0;
+
+	return (val > 0) ? 1 : 2;
+} 
+
+int interceptaSegmento(point A, point B, point C, point D) { 
+
+	int o1 = orientacao(A, B, C); 
+	int o2 = orientacao(A, B, D); 
+	int o3 = orientacao(C, D, A); 
+	int o4 = orientacao(C, D, B); 
+
+	if (o1 != o2 && o3 != o4) 
+		return 1; 
+
+	if (o1 == 0 && internoSegmento(A, C, B)) return 1; 
+	if (o2 == 0 && internoSegmento(A, D, B)) return 1; 
+	if (o3 == 0 && internoSegmento(C, A, D)) return 1; 
+	if (o4 == 0 && internoSegmento(C, B, D)) return 1; 
+
+	return 0;
+} 
+
+int estaDentro(object *poligono, int n, point p) 
+{ 
+	if (n < 3) return 0; 
+
+  point *extremo;
+  extremo = (point *)malloc(sizeof(point));
+  extremo->x = 99999;
+  extremo->y = p.y;
+
+	int count = 0, i = 0; 
+	do { 
+		int proximo = (i + 1) % n; 
+		if (interceptaSegmento(poligono->points[i], poligono->points[proximo], p, *extremo)) { 
+			if (orientacao(poligono->points[i], p, poligono->points[proximo]) == 0) 
+			  return internoSegmento(poligono->points[i], p, poligono->points[proximo]); 
+			count++; 
+		} 
+
+		i = proximo; 
+	} while (i != 0); 
+
+  int result = (count % 2 == 1) ? 1 : 0;
+	return result;
+} 
+
+int CenterObj(object *ob1, object* ob2, window *win)
+{
+  float x_center_win = (win->xmin + win->xmax) / 2;
+  float y_center_win = (win->ymin + win->ymax) / 2;
+/*
+  point *pnt;
+  pnt = (point *)malloc(sizeof(point));*/
+
+  for (int j = 0; j < ob1->numbers_of_points; j++) {
+      //printf("x: %f | y: %f", ob2->points[j].x, ob2->points[j].y);
+      estaDentro(ob2, ob2->numbers_of_points, ob1->points[j]) == 1 ? printf("Dentro\n") : printf("Fora\n"); 
+  }
+
 }
 
 int Dump2X(bufferdevice *dev, palette *pal)
