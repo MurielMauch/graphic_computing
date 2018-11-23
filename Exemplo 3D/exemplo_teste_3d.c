@@ -1,6 +1,8 @@
 #include "cg3d.h"
 
-//gcc teste.c -o teste cg3d.o cg2d.o -lm -lX11
+// gcc -c cg3d.c
+// gcc -c cg2d.c
+// gcc exemplo_teste_3d.c -o teste cg3d.o cg2d.o -lm -lX11
 
 int main(void) {
  point3d * p;
